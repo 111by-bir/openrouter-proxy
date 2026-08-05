@@ -1,9 +1,13 @@
 export default async function handler(req, res) {
-  const targetUrl = 'https://openrouter.ai/api/v1' + req.url.replace(/^\/api\/v1/, '');
+  // 不管 BiuBiu酱 带的是什么路径，全部去掉 /api 前缀，直接接上正确的 OpenRouter 地址
+  let cleanPath = req.url.replace(/^\/api(\/v1)?/, '');
+  let targetUrl = 'https://openrouter.ai/api/v1' + cleanPath;
+
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
+  
   try {
     const response = await fetch(targetUrl, {
       method: req.method,
